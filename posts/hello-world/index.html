@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html prefix="" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="搭建新博客的心路历程">
+<meta name="viewport" content="width=device-width">
+<title>Hello World | INCESSANT</title>
+<link href="../../assets/css/rst.css" rel="stylesheet" type="text/css">
+<link href="../../assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="../../assets/css/theme.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="../../assets/css/main.css">
+<link href="//fonts.googleapis.com/css?family=Source+Sans+Pro:300%7CMontserrat:700" rel="stylesheet" type="text/css">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<script src="//code.jquery.com/jquery-1.10.2.min.js"></script><link href="../../assets/css/custom.css" rel="stylesheet" type="text/css">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
+<link rel="canonical" href="https://hermera.github.io/posts/hello-world/">
+<!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><meta name="author" content="Hermera">
+<meta property="og:site_name" content="INCESSANT">
+<meta property="og:title" content="Hello World">
+<meta property="og:url" content="https://hermera.github.io/posts/hello-world/">
+<meta property="og:description" content="搭建新博客的心路历程">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2018-07-30T11:33:26+08:00">
+<meta property="article:tag" content="Hexo">
+<meta property="article:tag" content="Nikola">
+</head>
+<body><main><!--[if lt IE 7]><p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chrome/‎">install Google Chrome</a> to experience this site.</p><![endif]--><header id="site-header"><div class="container">
+            <h1 class="blog-title heading">INCESSANT</h1>
+            <p class="blog-description">There is no remedy for love but to love more.</p>
+        </div>
+        
+    <header id="header"><nav id="menu"><ul>
+<li><a href="../../">Home</a></li>
+                <li><a href="../../archive.html">Archive</a></li>
+                <li><a href="../../categories/">Categories</a></li>
+                <li><a href="../../pages/friends">Friends</a></li>
+
+    
+
+    
+    
+    </ul></nav></header></header><main class="content" role="main"><div class="container">
+
+            
+<article class="post"><header class="post-header"><h3 class="p-post-title">Hello World</h3>
+    </header><section class="post-content"><div>
+<p>最近因为重拾学业（？）打算重新启用博客，但是原来使用 <code>nexT</code> 的主题的博客因为配置被我改花了所以没有兴趣接着用了。刚好也没有什么事情要忙，就打算重新搭一个博客。</p>
+<p>原博客的基本内容都是 oi 题解，既然 oier 已经不适合用于定义我的身份，那么 oi 题解也没有必要重新搬运回新博客。于是这里空空如也，期待时间能让她渐渐丰满起来。</p>
+<p>新博客仍然由 Hexo 驱动，使用 <code>inside</code> 主题（找了很久，觉得这个最萌）。</p>
+<p>搭建的时候遇到了一些坑，记录一下。</p>
+<!-- TEASER_END -->
+
+<h2>npm 换源</h2>
+<p>下载 Hexo 的时候发现 npm 确实非常慢，不能支持使用。
+解决方法是使用 cnpm，换源到阿里的镜像。</p>
+<h2>inside 主题的分类和标签问题</h2>
+<p>这个问题真的很垃圾...
+主题的作者在文档里说这个主题没有使用 Hexo 自带的分类和标签工具，因此需要在 <code>package.json</code> 文件中去掉几个 Hexo 自带的插件。这实在是太方便了，方便就方便在 <strong>json 不支持注释</strong>。
+所以注释掉那三行后无限报错后，我发现了这个问题。</p>
+<p>另外，在 <code>source</code> 文件夹下的 <code>categories</code> 等文件夹也需要删除，因为它们都是基于 Hexo 自带插件的，存放在那里会出现冲突。</p>
+<h2>MathJax 支持</h2>
+<p>下载 <code>hexo-math</code> 插件后，其他主题都可以显示公式了，但是 <code>inside</code> 不行，我也懒得知道为什么了……
+解决方法是在主题目录下的 <code>layout</code> 文件夹中修改 <code>index.ejs</code> 配置文件，在其中加入对 MathJax 的链接即可。修改了支持行内公式和 120% 缩放的配置。</p>
+<p>还出现了一个比较垃圾的问题，<code>inside</code> 主题打开文章默认不会重新加载页面，这就导致 MathJax 不能渲染打开的文章，必须刷新一次。
+__debug 帮助我解决了这个问题，按照规定不可以感谢他。
+在 <code>inside/layout/index.ejs</code> 中加入以下代码：</p>
+<pre class="code literal-block"><span></span><span class="o">&lt;</span><span class="nx">script</span> <span class="nx">type</span><span class="o">=</span><span class="s2">"text/javascript"</span><span class="o">&gt;</span>
+    <span class="nb">window</span><span class="p">.</span><span class="nx">onload</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">'DOMSubtreeModified'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+            <span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">.</span><span class="nx">Queue</span><span class="p">([</span><span class="s2">"Typeset"</span><span class="p">,</span><span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">]);</span>
+        <span class="p">},</span> <span class="kc">false</span><span class="p">);</span>
+    <span class="p">};</span>
+<span class="o">&lt;</span><span class="err">/script&gt;</span>
+</pre>
+
+
+<p>逻辑是：如果监测到网页内容变化，则重新加载 MathJax。</p>
+<h2>一些页面修改</h2>
+<p><code>inside</code> 默认的界面显示宽度很窄，不好看。
+<code>inside/source/</code> 目录下你使用的那个语言的 js 一串乱码的文件中所有的 <code>640px</code> 改掉即可。
+标题 1 的上部距离上一行文字太近，在同一目录下的 css 文件里加入 <code>padding</code> 的设置就可以了。</p>
+<h2>行间公式问题</h2>
+<p>为了解决这个问题我把原文件夹的 hexo 折腾坏了……只好重新建了文件夹（还好有备份没出问题）
+因为 hexo 的 markdwon 渲染会出现一些转义冲突，比如 <code>_</code> 和 <code>/</code> 。
+为了解决它，最后采用了最丑陋的方法，即手改转义的 js 文件（每次重新安装都要修改一次）</p>
+<p><code>Blog/node_modules/marked/lib</code> 下的 <code>marked.js</code></p>
+<p>将 </p>
+<pre class="code literal-block"><span></span>escape: /^\\([\\`*{}\[\]()# +\-.!_&gt;])/，
+</pre>
+
+
+<p>替换为</p>
+<pre class="code literal-block"><span></span>escape: /^\\([`*\[\]()# +\-.!_&gt;])/,
+</pre>
+
+
+<p>这一步取消了对 <code>\\,\{,\}</code> 的转义 (escape)。</p>
+<p>将</p>
+<pre class="code literal-block"><span></span>em: /^\b_((?:[^_]|__)+?)_\b|^\*((?:\*\*|[\s\S])+?)\*(?!\*)/,
+</pre>
+
+
+<p>替换为</p>
+<pre class="code literal-block"><span></span>em:/^\*((?:\*\*|[\s\S])+?)\*(?!\*)/,
+</pre>
+
+
+<p>这一步取消了对斜体标记<code>_</code>的转义。因为单星号<code>*</code>也是斜体，所以这个改动无伤大雅。</p>
+<h2>换驱动器了！</h2>
+<p>换用 Nikola 驱动。
+Nikola 真方便。</p>
+<h2>未完待续</h2>
+<p>经验告诉我这个博客还将被无限折腾下去。
+这篇文章的剩余部分交给未来。</p>
+</div>
+ </section><hr>
+<footer class="post-footer"><section class="f-1"><section class="author"><p>
+                Hermera
+            </p></section><p class="f-post-time"><time datetime="2018-07-30T11:33:26+08:00">2018-07-30 11:33</time></p>
+        </section><section class="f-2"><section class="share"><span>Share:
+                <a class="icon-twitter" href="http://twitter.com/share?text=Hello+World&amp;url=https%3A%2F%2Fhermera.github.io%2Fposts%2Fhello-world%2F" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <i class="fa fa-twitter"></i>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fhermera.github.io%2Fposts%2Fhello-world%2F" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <i class="fa fa-facebook"></i>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=https%3A%2F%2Fhermera.github.io%2Fposts%2Fhello-world%2F" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <i class="fa fa-google-plus"></i>
+                </a>
+                </span>
+            </section></section></footer></article>
+</div>
+</main><footer id="site-footer"><div class="container">
+            <p>Contents © 2019         <a href="mailto:HermeraWen@outlook.com">Hermera</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         </p>
+            
+        </div>
+    </footer></main></body>
+</html>

@@ -10,6 +10,10 @@
   <lastmod>2019-02-22T02:52:00Z</lastmod>
  </sitemap>
  <sitemap>
+  <loc>https://hermera.github.io/categories/cat_computerscience.xml</loc>
+  <lastmod>2019-02-22T04:18:00Z</lastmod>
+ </sitemap>
+ <sitemap>
   <loc>https://hermera.github.io/categories/cat_nikola.xml</loc>
   <lastmod>2019-02-22T02:52:00Z</lastmod>
  </sitemap>
@@ -18,8 +22,12 @@
   <lastmod>2019-02-22T02:52:00Z</lastmod>
  </sitemap>
  <sitemap>
+  <loc>https://hermera.github.io/categories/hexo.xml</loc>
+  <lastmod>2019-02-22T04:18:00Z</lastmod>
+ </sitemap>
+ <sitemap>
   <loc>https://hermera.github.io/categories/nikola.xml</loc>
-  <lastmod>2019-02-22T02:52:00Z</lastmod>
+  <lastmod>2019-02-22T04:18:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://hermera.github.io/categories/python.xml</loc>
@@ -27,18 +35,18 @@
  </sitemap>
  <sitemap>
   <loc>https://hermera.github.io/galleries/demo/rss.xml</loc>
-  <lastmod>2019-02-22T02:52:00Z</lastmod>
+  <lastmod>2019-02-22T04:45:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://hermera.github.io/galleries/rss.xml</loc>
-  <lastmod>2019-02-22T02:52:00Z</lastmod>
+  <lastmod>2019-02-22T04:45:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://hermera.github.io/rss.xml</loc>
-  <lastmod>2019-02-22T02:52:00Z</lastmod>
+  <lastmod>2019-02-22T04:18:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://hermera.github.io/sitemap.xml</loc>
-  <lastmod>2019-02-22T02:52:00Z</lastmod>
+  <lastmod>2019-02-22T04:45:00Z</lastmod>
  </sitemap>
 </sitemapindex>
