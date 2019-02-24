@@ -17,7 +17,7 @@ import time
 
 # Data about this site
 BLOG_AUTHOR = "Hermera"  # (translatable)
-BLOG_TITLE = "INCESSANT"  # (translatable)
+BLOG_TITLE = "INCESSANT."  # (translatable)
 # This is the main URL for your site. It will be used
 # in a prominent link. Don't forget the protocol (http/https)!
 SITE_URL = "https://hermera.github.io/"
@@ -136,7 +136,8 @@ TRANSLATIONS_PATTERN = '{path}.{lang}.{ext}'
 
 NAVIGATION_LINKS = {
     DEFAULT_LANG: (
-        ("/", "Home"), 
+        ("/", "Home"),
+        ("/pages/about", "About"),
         ("/archive.html", "Archive"),
         ("/categories/", "Categories"),
         ("/pages/friends", "Friends"),
@@ -1042,7 +1043,33 @@ PRETTY_URLS = True
 
 # Want to use KaTeX instead of MathJax? While KaTeX may not support every
 # feature yet, it's faster and the output looks better.
-# USE_KATEX = False
+USE_KATEX = True
+
+MATHJAX_CONFIG = """
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\\(","\\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\\[","\\\]"] ],
+        processEscapes: true
+    },
+    displayAlign: 'center', // Change this to 'left' if you want left-aligned equations.
+    "HTML-CSS": {
+        styles: {'.MathJax_Display': {"margin": 0}}
+    }
+});
+</script>
+"""
+
+KATEX_AUTO_RENDER = """
+delimiters: [
+    {left: "$$", right: "$$", display: true},
+    {left: "\\\[", right: "\\\]", display: true},
+    {left: "$", right: "$", display: false},
+    {left: "\\\(", right: "\\\)", display: false}
+]
+"""
+
 
 # KaTeX auto-render settings. If you want support for the $.$ syntax (wihch may
 # conflict with running text!), just use this config:
