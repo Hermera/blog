@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html prefix="" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>Python 中的一些坑和坑和坑和弱智设计 | INCESSANT.</title>
+<link href="../../assets/css/rst.css" rel="stylesheet" type="text/css">
+<link href="../../assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="../../assets/css/theme.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="../../assets/css/main.css">
+<link href="//fonts.googleapis.com/css?family=Source+Sans+Pro:300%7CMontserrat:700" rel="stylesheet" type="text/css">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<script src="//code.jquery.com/jquery-1.10.2.min.js"></script><link href="../../assets/css/custom.css" rel="stylesheet" type="text/css">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
+<link rel="canonical" href="https://hermera.github.io/posts/python-tricks/">
+<!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><meta name="author" content="Hermera">
+<link rel="prev" href="../never-leave/" title="没离开过" type="text/html">
+<link rel="next" href="../exgcd/" title="三分钟学会扩展欧几里得算法" type="text/html">
+<meta property="og:site_name" content="INCESSANT.">
+<meta property="og:title" content="Python 中的一些坑和坑和坑和弱智设计">
+<meta property="og:url" content="https://hermera.github.io/posts/python-tricks/">
+<meta property="og:description" content="一个不怎么文雅的吐槽，因为给 Python 气坏了，Python 傻逼语言。
+前段时间给胡俊峰当 Python 的助教（工资还没发），发现这个语言的若干坑。
+
+
+命名空间
+其实这个机制很好的，垃圾就垃圾在 Python 创建引用的机制。
+一个等号就是创建引用。创建引用就是新变量。
+比如下面这段代码：
+x = 1
+def func():
+    x = 2
+
+print(x)
+
+
+
+当然是输出 1。">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2019-01-29T15:06:03+08:00">
+<meta property="article:tag" content="Python">
+</head>
+<body><main><!--[if lt IE 7]><p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chrome/‎">install Google Chrome</a> to experience this site.</p><![endif]--><header id="site-header"><div class="container">
+            <h1 class="blog-title heading">INCESSANT.</h1>
+            <p class="blog-description">There is no remedy for love but to love more.</p>
+        </div>
+        
+    <header id="header"><nav id="menu"><ul>
+<li><a href="../../">Home</a></li>
+                <li><a href="../../pages/about">About</a></li>
+                <li><a href="../../archive.html">Archive</a></li>
+                <li><a href="../../categories/">Categories</a></li>
+                <li><a href="../../pages/friends">Friends</a></li>
+
+    
+
+    
+    
+    </ul></nav></header></header><main class="content" role="main"><div class="container">
+
+            
+<article class="post"><header class="post-header"><h3 class="p-post-title">Python 中的一些坑和坑和坑和弱智设计</h3>
+    </header><section class="post-content"><div>
+<p>一个不怎么文雅的吐槽，因为给 Python 气坏了，Python 傻逼语言。</p>
+<p>前段时间给胡俊峰当 Python 的助教（工资还没发），发现这个语言的若干坑。</p>
+<!-- TEASER_END:  -->
+
+<h2>命名空间</h2>
+<p>其实这个机制很好的，垃圾就垃圾在 Python 创建引用的机制。</p>
+<p><strong>一个等号就是创建引用。创建引用就是新变量。</strong></p>
+<p>比如下面这段代码：</p>
+<pre class="code literal-block"><span></span><span class="n">x</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="k">def</span> <span class="nf">func</span><span class="p">():</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre>
+
+
+<p>当然是输出 1。</p>
+<p>你说不对啊，为什么变量的值没改呢？因为 Python 根本没有变量，只有对象和对于对象的引用。你在函数内创建了一个对于 <code>2</code> 的引用，引用名称叫 <code>x</code>，离开了函数空间这个引用就被销毁了。你说你外面还有个 <code>x</code> 啊？Python: 我管你呢。</p>
+<p>如果要 Python “发现”一个外部的引用，那么需要关键字 <code>global</code>，至少也得是个 <code>nonlocal</code>。</p>
+<h2>可变与不可变</h2>
+<p>对于不可变对象，比如整数、字符串、元组这些对象，<code>+=</code> 是怎么发挥作用的呢？</p>
+<p><code>x += 1</code> 将被翻译成 <code>x = x + 1</code>。换句话说，重新创建一个引用，引用名称是 <code>x</code>，新对象是 <code>x + 1</code>。</p>
+<p>你说 C++ 不这样啊？那关我 Python 什么事呢。</p>
+<p>根本原因是不可变对象只有成员函数 <code>__add__</code>，而没有自增运算 <code>__iadd__</code>。只有对于可变对象，<code>x += 1</code> 和 <code>x = x + 1</code> 才是有区别的。</p>
+<pre class="code literal-block"><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="s1">'aba'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">id</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="mi">140367141023280</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">+=</span> <span class="s1">'a'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">id</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="mi">140367141023336</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">id</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="mi">140367140999880</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">+=</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">id</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="mi">140367140999880</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">id</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="mi">140367141001736</span>
+</pre>
+
+
+<h2>一些神奇问题</h2>
+<p>同学 A 提问：我 list 怎么没了？</p>
+<pre class="code literal-block"><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">b</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">c</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">c</span>
+<span class="o">&lt;</span><span class="nb">zip</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x7fa9c593dbc8</span><span class="o">&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+<span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">)]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">list</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+<span class="p">[]</span>
+</pre>
+
+
+<p>zip 对象是一个 iterator。只有 <code>next()</code>，迭代完了就没了。</p>
+<p>同学 B 提问：Python 是不是不许我 dp 啊？</p>
+<pre class="code literal-block"><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">m</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">dp</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span><span class="p">]</span> <span class="o">*</span> <span class="n">m</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">dp</span>
+<span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">dp</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">dp</span>
+<span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
+</pre>
+
+
+<p>Python: 真抱歉，list 的乘法是浅复制。</p>
+<pre class="code literal-block"><span></span><span class="n">dp</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="p">)]</span>
+</pre>
+
+
+<p>上面是正确写法。</p>
+</div>
+ </section><hr>
+<footer class="post-footer"><section class="f-1"><section class="author"><p>
+                Hermera
+            </p></section><p class="f-post-time"><time datetime="2019-01-29T15:06:03+08:00">2019-01-29 15:06</time></p>
+        </section><section class="f-2"><section class="share"><span>Share:
+                <a class="icon-twitter" href="http://twitter.com/share?text=Python+%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9D%91%E5%92%8C%E5%9D%91%E5%92%8C%E5%9D%91%E5%92%8C%E5%BC%B1%E6%99%BA%E8%AE%BE%E8%AE%A1&amp;url=https%3A%2F%2Fhermera.github.io%2Fposts%2Fpython-tricks%2F" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <i class="fa fa-twitter"></i>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fhermera.github.io%2Fposts%2Fpython-tricks%2F" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <i class="fa fa-facebook"></i>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=https%3A%2F%2Fhermera.github.io%2Fposts%2Fpython-tricks%2F" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <i class="fa fa-google-plus"></i>
+                </a>
+                </span>
+            </section></section></footer></article>
+</div>
+</main><footer id="site-footer"><div class="container">
+            <p>Contents © 2019         <a href="mailto:HermeraWen@outlook.com">Hermera</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         </p>
+            
+        </div>
+    </footer></main></body>
+</html>

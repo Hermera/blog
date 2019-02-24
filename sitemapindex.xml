@@ -6,47 +6,63 @@
     xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <sitemap>
-  <loc>https://hermera.github.io/categories/blog.xml</loc>
-  <lastmod>2019-02-22T02:52:00Z</lastmod>
- </sitemap>
- <sitemap>
   <loc>https://hermera.github.io/categories/cat_computerscience.xml</loc>
-  <lastmod>2019-02-22T04:18:00Z</lastmod>
+  <lastmod>2019-02-24T08:32:00Z</lastmod>
  </sitemap>
  <sitemap>
-  <loc>https://hermera.github.io/categories/cat_nikola.xml</loc>
-  <lastmod>2019-02-22T02:52:00Z</lastmod>
+  <loc>https://hermera.github.io/categories/cat_math.xml</loc>
+  <lastmod>2019-02-24T08:29:00Z</lastmod>
  </sitemap>
  <sitemap>
-  <loc>https://hermera.github.io/categories/demo.xml</loc>
-  <lastmod>2019-02-22T02:52:00Z</lastmod>
+  <loc>https://hermera.github.io/categories/cat_xie-zuo.xml</loc>
+  <lastmod>2019-02-24T08:17:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>https://hermera.github.io/categories/dc-comics.xml</loc>
+  <lastmod>2019-02-24T08:02:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>https://hermera.github.io/categories/deep-learning.xml</loc>
+  <lastmod>2019-02-24T08:32:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://hermera.github.io/categories/hexo.xml</loc>
-  <lastmod>2019-02-22T04:18:00Z</lastmod>
+  <lastmod>2019-02-24T06:30:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>https://hermera.github.io/categories/linux.xml</loc>
+  <lastmod>2019-02-24T08:22:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://hermera.github.io/categories/nikola.xml</loc>
-  <lastmod>2019-02-22T04:18:00Z</lastmod>
+  <lastmod>2019-02-24T07:49:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://hermera.github.io/categories/python.xml</loc>
-  <lastmod>2019-02-22T02:52:00Z</lastmod>
+  <lastmod>2019-02-24T08:17:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>https://hermera.github.io/categories/star-trek.xml</loc>
+  <lastmod>2019-02-24T08:06:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>https://hermera.github.io/categories/xie-zuo.xml</loc>
+  <lastmod>2019-02-24T07:41:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://hermera.github.io/galleries/demo/rss.xml</loc>
-  <lastmod>2019-02-22T04:45:00Z</lastmod>
+  <lastmod>2019-02-24T06:26:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://hermera.github.io/galleries/rss.xml</loc>
-  <lastmod>2019-02-22T04:45:00Z</lastmod>
+  <lastmod>2019-02-24T06:26:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://hermera.github.io/rss.xml</loc>
-  <lastmod>2019-02-22T04:18:00Z</lastmod>
+  <lastmod>2019-02-24T08:32:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://hermera.github.io/sitemap.xml</loc>
-  <lastmod>2019-02-22T04:45:00Z</lastmod>
+  <lastmod>2019-02-24T08:32:00Z</lastmod>
  </sitemap>
 </sitemapindex>

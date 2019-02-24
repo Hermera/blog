@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html prefix="" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>Linux 中的软链接和硬链接 | INCESSANT.</title>
+<link href="../../assets/css/rst.css" rel="stylesheet" type="text/css">
+<link href="../../assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="../../assets/css/theme.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="../../assets/css/main.css">
+<link href="//fonts.googleapis.com/css?family=Source+Sans+Pro:300%7CMontserrat:700" rel="stylesheet" type="text/css">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<script src="//code.jquery.com/jquery-1.10.2.min.js"></script><link href="../../assets/css/custom.css" rel="stylesheet" type="text/css">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
+<link rel="canonical" href="https://hermera.github.io/posts/linux-links/">
+<!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><meta name="author" content="Hermera">
+<link rel="prev" href="../python-objects/" title="Python 构造对象的机制" type="text/html">
+<link rel="next" href="../never-leave/" title="没离开过" type="text/html">
+<meta property="og:site_name" content="INCESSANT.">
+<meta property="og:title" content="Linux 中的软链接和硬链接">
+<meta property="og:url" content="https://hermera.github.io/posts/linux-links/">
+<meta property="og:description" content="前段时间把一个脚本文件放到 usr/bin 目录下遇到了一些问题，从而学习一下 linux 软硬链接的不同机制。
+
+
+软链接 (soft link or symbolic link)
+创建命令
+ln origin_dir link_dir -s
+
+
+
+软链接的本质是一个纯文本文档，包含一个目录路径，就是你提供的 origin_dir。
+也就是说，如果你提供了一个相对路径，它会以 link_dir ">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2018-08-06T15:06:03+08:00">
+<meta property="article:tag" content="Linux">
+</head>
+<body><main><!--[if lt IE 7]><p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chrome/‎">install Google Chrome</a> to experience this site.</p><![endif]--><header id="site-header"><div class="container">
+            <h1 class="blog-title heading">INCESSANT.</h1>
+            <p class="blog-description">There is no remedy for love but to love more.</p>
+        </div>
+        
+    <header id="header"><nav id="menu"><ul>
+<li><a href="../../">Home</a></li>
+                <li><a href="../../pages/about">About</a></li>
+                <li><a href="../../archive.html">Archive</a></li>
+                <li><a href="../../categories/">Categories</a></li>
+                <li><a href="../../pages/friends">Friends</a></li>
+
+    
+
+    
+    
+    </ul></nav></header></header><main class="content" role="main"><div class="container">
+
+            
+<article class="post"><header class="post-header"><h3 class="p-post-title">Linux 中的软链接和硬链接</h3>
+    </header><section class="post-content"><div>
+<p>前段时间把一个脚本文件放到 <code>usr/bin</code> 目录下遇到了一些问题，从而学习一下 linux 软硬链接的不同机制。</p>
+<!-- TEASER_END:  -->
+
+<h2>软链接 (soft link or symbolic link)</h2>
+<p>创建命令</p>
+<pre class="code literal-block"><span></span>ln origin_dir link_dir -s
+</pre>
+
+
+<p>软链接的本质是一个纯文本文档，包含一个目录路径，就是你提供的 <code>origin_dir</code>。
+也就是说，如果你提供了一个相对路径，它会以 <code>link_dir</code> 作为相对路径的起始点，而不是把当前的相对路径翻译成绝对路径再存入链接文件。这也就是一般需要给它提供绝对路径。</p>
+<p>由于软链接只是一个目录路径，所以它对原文件不会有任何影响。删除了软链接指向的目录后，软链接会失效，再创建一个相同的又会重新生效（即使两个文件已经并不是同一个了）。软链接也可以对目录进行创建。</p>
+<h2>硬链接 (hard link)</h2>
+<p>创建命令</p>
+<pre class="code literal-block"><span></span>ln origin_dir link_dir
+</pre>
+
+
+<p>硬链接和软链接有着本质的不同。</p>
+<p>我们知道文件都有文件名与数据，这在 Linux 上被分成两个部分：用户数据 (user data) 与元数据 (metadata)。用户数据，即文件数据块 (data block)，数据块是记录文件真实内容的地方；而元数据则是文件的附加属性，如文件大小、创建时间、所有者等信息。在 Linux 中，元数据中的 inode 号（inode 是文件元数据的一部分但其并不包含文件名，inode 号即索引节点号）才是文件的唯一标识而非文件名。文件名仅是为了方便人们的记忆和使用，系统或程序通过 inode 号寻找正确的文件数据块。</p>
+<p>所以通过文件名打开文件的实际流程是
+<img alt="" src="../../images/linux-filename-inode-data.jpg"></p>
+<p>硬链接，相当于一个文件拥有不同的别名，这些不同的别名全都指向同一个 icode，自然也就是访问同一个文件。所有硬链接的地位都是平等的，可以认为原文件和硬链接互为硬链接。</p>
+<p>同样，每个文件都有一个链接计数器。当指向该文件的硬链接数为 0 时，文件占用空间将被回收。这揭示了硬链接一个潜在的危险——如果你创建了硬链接而忘记删除它，就永远不会释放这个文件的空间。</p>
+<p>硬链接的优点在于，你可以把一个文件存放在多个位置，同时可以随意移动它们（而软链接，如果你移动了原文件，软链接就失效了）。</p>
+<p>但是硬链接也有它的局限性：
+- 不能跨文件系统，举例来说，不能把 <code>/home</code> 下的文件链接到 <code>/usr</code> 下。这是因为不同的文件系统可能出现 inode 重复的情况。
+- 不能对目录进行硬链接（普通用户没有该权限。当然，可以使用命令强行这样做）。</p>
+<p>关于后者需要解释一下原因。我们知道，linux 下的目录也是一种特殊的文件，为什么不能对它进行操作呢？</p>
+<p>我看到一些值得参考的解答：</p>
+<ul>
+<li>
+<p>考虑在子目录里创建链接到上层。这样，从子目录里可以访问它的祖先，从而造成循环。对于软链接，由于软链接是一种特殊的文件，linux 系统会自动判断如果遇到 8 个以上的符号链接就停止遍历。但是对于硬链接，没有任何方法判断当前是否处在一个循环中。</p>
+</li>
+<li>
+<p>也可以从文件系统设计的角度理解。每个文件夹下的 <code>.</code> 是一个指向自己的硬链接，而 <code>..</code> 则是一个指向父亲的硬链接。一个没有子文件夹的文件夹的链接计数器为 2（自身和<code>.</code>），而每增加一个子文件夹，都会新增一个 <code>..</code> 硬链接指向它。这样的文件组织是严格的树形（可以说，文件系统正是利用目录硬链接管理文件，使用它遍历目录），如果允许用户创建目录硬链接，则文件系统很可能变成一个图，从而导致错误。</p>
+</li>
+<li>
+<p>目录文件中存放了 <code>.</code> 和 <code>..</code> 数据，也就是说，它文件的内容本身就包含了它在文件系统的位置。这样，从文件系统的其他位置指向它则是不优雅的。</p>
+</li>
+</ul>
+</div>
+ </section><hr>
+<footer class="post-footer"><section class="f-1"><section class="author"><p>
+                Hermera
+            </p></section><p class="f-post-time"><time datetime="2018-08-06T15:06:03+08:00">2018-08-06 15:06</time></p>
+        </section><section class="f-2"><section class="share"><span>Share:
+                <a class="icon-twitter" href="http://twitter.com/share?text=Linux+%E4%B8%AD%E7%9A%84%E8%BD%AF%E9%93%BE%E6%8E%A5%E5%92%8C%E7%A1%AC%E9%93%BE%E6%8E%A5&amp;url=https%3A%2F%2Fhermera.github.io%2Fposts%2Flinux-links%2F" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <i class="fa fa-twitter"></i>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fhermera.github.io%2Fposts%2Flinux-links%2F" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <i class="fa fa-facebook"></i>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=https%3A%2F%2Fhermera.github.io%2Fposts%2Flinux-links%2F" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <i class="fa fa-google-plus"></i>
+                </a>
+                </span>
+            </section></section></footer></article>
+</div>
+</main><footer id="site-footer"><div class="container">
+            <p>Contents © 2019         <a href="mailto:HermeraWen@outlook.com">Hermera</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         </p>
+            
+        </div>
+    </footer></main></body>
+</html>

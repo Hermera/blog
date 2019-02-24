@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html prefix="" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>Python 构造对象的机制 | INCESSANT.</title>
+<link href="../../assets/css/rst.css" rel="stylesheet" type="text/css">
+<link href="../../assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="../../assets/css/theme.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="../../assets/css/main.css">
+<link href="//fonts.googleapis.com/css?family=Source+Sans+Pro:300%7CMontserrat:700" rel="stylesheet" type="text/css">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<script src="//code.jquery.com/jquery-1.10.2.min.js"></script><link href="../../assets/css/custom.css" rel="stylesheet" type="text/css">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
+<link rel="canonical" href="https://hermera.github.io/posts/python-objects/">
+<!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><meta name="author" content="Hermera">
+<link rel="prev" href="../japonica/" title="枇杷树" type="text/html">
+<link rel="next" href="../linux-links/" title="Linux 中的软链接和硬链接" type="text/html">
+<meta property="og:site_name" content="INCESSANT.">
+<meta property="og:title" content="Python 构造对象的机制">
+<meta property="og:url" content="https://hermera.github.io/posts/python-objects/">
+<meta property="og:description" content="这里 python 的机制与 c++ 不同。
+python 使用对象模型来存储数据，构造任何类型的值都是一个对象。所有的 python 对象都拥有三个特性：身份、类型和值。
+
+
+
+
+身份：每个对象都有一个唯一的身份标识自己，对象的身份可以用内建函数 id() 来得到。这个值可以被认为是该对象的内存地址。
+
+
+类型：描述一种对象的类型所需要的信息不可能用一个字符串来搞定，所以类型不能是一个简单的字符">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2018-08-04T15:06:03+08:00">
+<meta property="article:tag" content="Python">
+</head>
+<body><main><!--[if lt IE 7]><p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chrome/‎">install Google Chrome</a> to experience this site.</p><![endif]--><header id="site-header"><div class="container">
+            <h1 class="blog-title heading">INCESSANT.</h1>
+            <p class="blog-description">There is no remedy for love but to love more.</p>
+        </div>
+        
+    <header id="header"><nav id="menu"><ul>
+<li><a href="../../">Home</a></li>
+                <li><a href="../../pages/about">About</a></li>
+                <li><a href="../../archive.html">Archive</a></li>
+                <li><a href="../../categories/">Categories</a></li>
+                <li><a href="../../pages/friends">Friends</a></li>
+
+    
+
+    
+    
+    </ul></nav></header></header><main class="content" role="main"><div class="container">
+
+            
+<article class="post"><header class="post-header"><h3 class="p-post-title">Python 构造对象的机制</h3>
+    </header><section class="post-content"><div>
+<p>这里 python 的机制与 c++ 不同。</p>
+<p>python 使用对象模型来存储数据，构造任何类型的值都是一个对象。所有的 python 对象都拥有三个特性：身份、类型和值。</p>
+<!-- TEASER_END:  -->
+
+<ul>
+<li>
+<p>身份：每个对象都有一个唯一的身份标识自己，对象的身份可以用内建函数 <code>id()</code> 来得到。这个值可以被认为是该对象的内存地址。</p>
+</li>
+<li>
+<p>类型：描述一种对象的类型所需要的信息不可能用一个字符串来搞定，所以类型不能是一个简单的字符串。这些信息不能也不应该和数据保存在一起，所以我们将类型定义成对象，这就是说类型对象，所有类型对象的类型都是 type 。可以用内建函数 <code>type()</code> 查看对象的类型。</p>
+</li>
+<li>
+<p>值：对象表示的数据项。如果对象支持更新操作，那么它的值就可以改变，否则它的值就是只读的。对象的值是否可以改变被称为对象的可改变性。</p>
+</li>
+</ul>
+<p>这也是 python 中没有自增运算符 <code>++</code> 的原因。</p>
+<h2>对象的创建</h2>
+<p>举例来说，对于如下语句</p>
+<pre class="code literal-block"><span></span><span class="n">x</span> <span class="o">=</span> <span class="mi">20000527</span>
+</pre>
+
+
+<p>程序会生成一个 int 对象，该对象有唯一的 id ，类型为 int，值为 20000527。</p>
+<p>接下来，程序将创建变量 x，并创建一个引用，将 x 指向刚才创建的对象。</p>
+<pre class="code literal-block"><span></span><span class="n">x</span> <span class="o">=</span> <span class="mi">20000527</span>
+<span class="n">y</span> <span class="o">=</span> <span class="mi">20000527</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">x</span>
+</pre>
+
+
+<p>若上述语句存在于同一个代码块中，则 x, y, z 指向同一个地址（即为 20000527 这个对象申请的内存地址），这三个变量的 id 也相同。</p>
+<p>如果上述变量不存在于同一个代码块呢？</p>
+<pre class="code literal-block"><span></span>&gt;&gt;&gt; x = 1
+&gt;&gt;&gt; y = 1
+&gt;&gt;&gt; x is y
+True
+&gt;&gt;&gt; x = 20000527
+&gt;&gt;&gt; y = 20000527
+&gt;&gt;&gt; x is y
+False
+&gt;&gt;&gt; x = 'ab'
+&gt;&gt;&gt; y = 'ab'
+&gt;&gt;&gt; x is y
+True
+&gt;&gt;&gt; x = 'gubed is a nice boy'
+&gt;&gt;&gt; y = 'gubed is a nice boy'
+&gt;&gt;&gt; x is y
+False
+&gt;&gt;&gt; x = '%^%%&amp;*%%%^*^%/'
+&gt;&gt;&gt; y = '%^%%&amp;*%%%^*^%/'
+&gt;&gt;&gt; x is y
+False
+&gt;&gt;&gt; x = 1.1
+&gt;&gt;&gt; y = 1.1
+&gt;&gt;&gt; x is y
+False
+&gt;&gt;&gt; x = 1.1; y = 1.1; x is y
+True
+&gt;&gt;&gt; x = y
+&gt;&gt;&gt; x is y
+True
+</pre>
+
+
+<p><code>x is y</code> 等价于 <code>id(x) == id(y)</code>。</p>
+<p>由于小整数使用频繁，每次都创建新对象影响程序效率，所以对于 [-5, 256] 的小整数，python 预留了小整数对象池，所有的小整数都指向这些对象（即使不在一个代码块内）。
+而对于大整数的处理，就像上面说的那样，如果在一个代码块内就不会重复创建。</p>
+<p>而字符串的规则是，只包含 [a, z] 字母的字符串只会被创建一次（python 认为这些字符串复用率高），其他的字符串则会被重复创建。
+浮点数的规则和大整数相同。</p>
+<h2>对象的删除</h2>
+<p>在 c++ 中，提供了 <code>new</code>/<code>delete</code> 来创建/删除对象。</p>
+<p>python 没有 <code>new</code> 关键字，<code>del</code> 也不能删除对象。严格来说，你没有办法在一个 python 程序显式地使用语句中删除一个对象。</p>
+<pre class="code literal-block"><span></span><span class="n">x</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="k">del</span> <span class="n">x</span>
+</pre>
+
+
+<p>上述程序的第一行创建了一个对象并将变量 x 指向它。
+上述程序的第二行解除了 x 对该对象的引用。
+也就是说，<code>del</code> 的作用就是解除变量对对象的引用。</p>
+<p>而 python 的所有对象都自带一个计数器，表示有多少个变量指向该对象。
+当该对象不再被引用时，python 解释器将在合适的时间回收它。</p>
+</div>
+ </section><hr>
+<footer class="post-footer"><section class="f-1"><section class="author"><p>
+                Hermera
+            </p></section><p class="f-post-time"><time datetime="2018-08-04T15:06:03+08:00">2018-08-04 15:06</time></p>
+        </section><section class="f-2"><section class="share"><span>Share:
+                <a class="icon-twitter" href="http://twitter.com/share?text=Python+%E6%9E%84%E9%80%A0%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%9C%BA%E5%88%B6&amp;url=https%3A%2F%2Fhermera.github.io%2Fposts%2Fpython-objects%2F" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <i class="fa fa-twitter"></i>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fhermera.github.io%2Fposts%2Fpython-objects%2F" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <i class="fa fa-facebook"></i>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=https%3A%2F%2Fhermera.github.io%2Fposts%2Fpython-objects%2F" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <i class="fa fa-google-plus"></i>
+                </a>
+                </span>
+            </section></section></footer></article>
+</div>
+</main><footer id="site-footer"><div class="container">
+            <p>Contents © 2019         <a href="mailto:HermeraWen@outlook.com">Hermera</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         </p>
+            
+        </div>
+    </footer></main></body>
+</html>
